@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import it.polito.tdp.seriea.model.Match;
 import it.polito.tdp.seriea.model.Season;
 import it.polito.tdp.seriea.model.Team;
 
@@ -55,6 +57,44 @@ public class SerieADAO {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public List<Match> listMathesForTeam(Team squadra, Map<Integer, Season> stagioniIdMap, Map<String, Team> squadreIdMap){
+		
+		String sql = "SELECT m.match_id, m.Season, m.`Div`, m.DATE, m.HomeTeam, m.AwayTeam, m.FTHG, m.FTAG, m.FTR " + 
+				"FROM matches m " + 
+				"WHERE m.HomeTeam = ? OR m.AwayTeam = ? ";
+		
+		List<Match> result = new ArrayList<>();
+		
+		try {
+			
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, squadra.getTeam());
+			st.setString(2, squadra.getTeam());
+			ResultSet res = st.executeQuery();
+			
+		while(res.next()) {
+			Match match = new Match(res.getInt("match_id"),
+					stagioniIdMap.get(res.getInt("season")),
+					res.getString("div"), res.getDate("date").toLocalDate(),
+					squadreIdMap.get(res.getString("hometeam")),
+					squadreIdMap.get(res.getString("awayteam")),
+					res.getInt("fthg"),
+					res.getInt("ftag"),
+					res.getString("ftr"));
+			
+			result.add(match);
+		}
+		conn.close();	
+		
+		return result;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

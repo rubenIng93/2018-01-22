@@ -5,7 +5,12 @@
 package it.polito.tdp.seriea;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Season;
+import it.polito.tdp.seriea.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,6 +18,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 
 public class SerieAController {
+	
+	Model model = new Model();
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -21,7 +28,7 @@ public class SerieAController {
     private URL location;
 
     @FXML // fx:id="boxSquadra"
-    private ChoiceBox<?> boxSquadra; // Value injected by FXMLLoader
+    private ChoiceBox<Team> boxSquadra; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnSelezionaSquadra"
     private Button btnSelezionaSquadra; // Value injected by FXMLLoader
@@ -37,6 +44,15 @@ public class SerieAController {
 
     @FXML
     void doSelezionaSquadra(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	Team team = boxSquadra.getValue();
+    	
+    	Map<Season, Integer> punteggi = model.calcolaPunteggi(team);
+    	
+    	for(Season s: punteggi.keySet()) {
+    		txtResult.appendText("Stagione: "+s.getDescription()+" punti: "+punteggi.get(s)+"\n");
+    	}
 
     }
 
@@ -58,5 +74,10 @@ public class SerieAController {
         assert btnTrovaCamminoVirtuoso != null : "fx:id=\"btnTrovaCamminoVirtuoso\" was not injected: check your FXML file 'SerieA.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'SerieA.fxml'.";
 
+    }
+    
+    public void setModel(Model model) {
+    	this.model = model;
+    	boxSquadra.getItems().addAll(model.getSquadre());
     }
 }

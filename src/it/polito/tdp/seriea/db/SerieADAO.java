@@ -78,7 +78,8 @@ public class SerieADAO {
 		while(res.next()) {
 			Match match = new Match(res.getInt("match_id"),
 					stagioniIdMap.get(res.getInt("season")),
-					res.getString("div"), res.getDate("date").toLocalDate(),
+					res.getString("div"),
+					res.getDate("date").toLocalDate(),
 					squadreIdMap.get(res.getString("hometeam")),
 					squadreIdMap.get(res.getString("awayteam")),
 					res.getInt("fthg"),

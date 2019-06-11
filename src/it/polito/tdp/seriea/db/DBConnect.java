@@ -18,7 +18,7 @@ public class DBConnect {
 
 			ds.setJdbcUrl(jdbcURL);
 			ds.setUsername("root");
-			ds.setPassword("0000");
+			ds.setPassword("");
 
 			// configurazione MySQL
 			ds.addDataSourceProperty("cachePrepStmts", "true");
